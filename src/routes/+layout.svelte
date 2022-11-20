@@ -18,7 +18,7 @@
     };
 </script>
 
-<main class="w-full h-screen bg-slate-800">
+<main class="w-full h-screen bg-slate-800 p-1">
     <slot />
     <div class="z-0">
         <Particles
