@@ -1,10 +1,65 @@
 <script lang="ts">
-    function handleButtonClick() {
-        alert("Coming soon!")
+	import type { Person } from "@prisma/client";
+	import type { PageData } from "./$types";
+    import { Confetti } from 'svelte-confetti';
+
+    export let data: PageData
+
+    let person: Person | undefined = undefined
+    let showConfetti = false
+
+    function login() {
+        const username = prompt("誰ですか⤴︎")
+        const password = prompt("パスワードは？")
+
+
+        const attemptedPerson = data.people.find(p => p.name === username)
+
+        if (attemptedPerson?.passcode === password) {
+            person = attemptedPerson
+        } else {
+            alert("お前は知らない！誰だ！")
+        }
     }
+
+    function handleButtonClick() {
+        if (!person) {
+            alert("ログインしていない。ログインしてまたクリックしてください。")
+            login()
+            return
+        }
+
+        const pair = data.pairs.find(p => p.giverId === person.id)
+
+        if (!pair) {
+            alert("相手見つかっていない！ジャマルに連絡してください。")
+            return
+        }
+
+        const pairPerson = data.people.find(p => p.id === pair.receiverId)
+
+        alert(`あなたの相手が…${pairPerson?.name}!🥳`)
+        showConfetti = true
+    }
+
 </script>
 
+{#if person}
 <div class="flex flex-col w-full text-slate-900">
+    {#if showConfetti}
+    <div
+        class="fixed top-[-50px] left-0 z-50 w-screen h-screen flex justify-center overflow-hidden pointer-events-none"
+    >
+        <Confetti
+            x={[-5, 5]}
+            y={[0, 0.1]}
+            delay={[0, 2000]}
+            duration="2000"
+            amount="500"
+            fallDistance="100vh"
+        />
+    </div>
+    {/if}
     <div class="w-full h-screen flex flex-col justify-center items-center gap-12">
         <div class="flex flex-col rounded-lg bg-white p-8 md:p-24 gap-4">
             <div class="flex flex-col">
@@ -31,7 +86,7 @@
         <div class="self-center absolute bottom-8 md:bottom-12 text-5xl animate-pulse"><img src="/Down_Arrow.svg" alt="Down arrow"/></div>
     </div>
 
-    <div class="flex flex-col rounded-lg bg-white p-8 md:p-24 gap-4">
+    <div class="flex flex-col rounded-lg bg-white p-8 md:p-24 gap-12">
         <div class="flex flex-col md:flex-row w-full h-fit items-center">
             <div class="w-full md:hidden md:w-1/2 md:p-24 p-12">
                 <img class="w-full" src="/santas/eating.svg" alt="santa eating"/>
@@ -48,6 +103,20 @@
 
         <div class="flex flex-col md:flex-row w-full h-fit items-center">
             <div class="w-full md:w-1/2 p-12 md:p-24">
+                <img class="w-full" src="/santas/lights.svg" alt="santa eating"/>
+            </div>
+            <div class="flex flex-col gap-4 md:w-1/2">
+                <div class="text-base font-bold md:text-2xl self-center md:self-start"><span class="text-red-900 text-bold">ドレス</span>コード</div>
+                <div class="text-xs md:text-2xl">
+                    <span class="bg-red-900 rounded-full p-2 text-bold text-white">赤</span>
+                    <span class="bg-white border border-1 border-black rounded-full p-2 text-bold">白</span>
+                    <span class="bg-green-900 rounded-full p-2 text-bold text-white">緑</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row w-full h-fit items-center">
+            <div class="w-full md:w-1/2 p-12 md:p-24">
                 <img class="w-full" src="/santas/present.svg" alt="santa eating"/>
             </div>
             <div class="flex flex-col gap-4 md:w-1/2">
@@ -56,5 +125,12 @@
                 <button on:click={handleButtonClick} class="w-full md:w-fit bg-red-900 hover:bg-red-600 drop-shadow hover:drop-shadow-lg text-white rounded-lg px-10 py-6">交換しよう</button>
             </div>
         </div>
+
     </div>
 </div>
+{:else}
+<div class="w-screen h-screen flex flex-col gap-8 items-center justify-center text-center text-white text-5xl">
+    あなたは誰でしょうか。
+    <button on:click={login} class="w-fit bg-red-900 hover:bg-red-600 drop-shadow hover:drop-shadow-lg text-white rounded-lg px-10 py-6">私は…</button>
+</div>
+{/if}
