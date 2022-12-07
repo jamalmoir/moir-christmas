@@ -10,8 +10,8 @@
     let showPairModal = false
 
     function login() {
-        const username = prompt("誰ですか⤴︎")
-        const password = prompt("パスワードは？")
+        const username = prompt("誰ですか⤴︎")?.toLowerCase()
+        const password = prompt("パスワードは？")?.toLowerCase
 
 
         const attemptedPerson = data.people.find(p => p.name === username)
