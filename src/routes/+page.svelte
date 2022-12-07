@@ -7,6 +7,7 @@
 
     let person: Person | undefined = undefined
     let showConfetti = false
+    let showPairModal = false
 
     function login() {
         const username = prompt("誰ですか⤴︎")
@@ -23,12 +24,23 @@
     }
 
     function handleButtonClick() {
+        // const pairPerson = getPairPerson()
+        // alert(`あなたの相手が…${pairPerson?.name}!🥳`)
+        showConfetti = true
+        showPairModal = true
+    }
+
+    function handlePairModalClose() {
+        showConfetti = false
+        showPairModal = false
+    }
+
+    function getPairPerson() {
         if (!person) {
             alert("ログインしていない。ログインしてまたクリックしてください。")
             login()
             return
         }
-
         const pair = data.pairs.find(p => p.giverId === person.id)
 
         if (!pair) {
@@ -38,8 +50,7 @@
 
         const pairPerson = data.people.find(p => p.id === pair.receiverId)
 
-        alert(`あなたの相手が…${pairPerson?.name}!🥳`)
-        showConfetti = true
+        return pairPerson
     }
 
 </script>
@@ -58,6 +69,14 @@
             amount="500"
             fallDistance="100vh"
         />
+    </div>
+    {/if}
+
+    {#if showPairModal}
+    <div class="fixed top-0 left-0 w-screen h-screen flex flex-row items-center justify-center backdrop-blur-sm z-40 p-4" on:click={handlePairModalClose}>
+        <div class="bg-white w-full max-w-prose p-8 rounded-lg border border-2 border-red-900 text-center">
+            あなたの相手が…<span class="text-red-900 text-bold">{getPairPerson().name}</span>!🥳
+        </div>
     </div>
     {/if}
     <div class="w-full h-screen flex flex-col justify-center items-center gap-12">
