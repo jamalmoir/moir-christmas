@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client'
 import type { RequestHandler } from './$types';
-import { getEventListeners } from 'events';
 import { json } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async () => {

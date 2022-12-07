@@ -9,9 +9,12 @@
     let showConfetti = false
     let showPairModal = false
 
+    // const pairs = data.pairs.map(p => [data.people.find(person => person.id === p.giverId).name, data.people.find(person => person.id === p.receiverId).name])
+    // console.log(pairs)
+
     function login() {
         const username = prompt("誰ですか⤴︎")?.toLowerCase()
-        const password = prompt("パスワードは？")?.toLowerCase
+        const password = prompt("パスワードは？")?.toLowerCase()
 
 
         const attemptedPerson = data.people.find(p => p.name === username)
