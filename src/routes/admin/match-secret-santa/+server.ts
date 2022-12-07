@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import type { RequestHandler } from './$types';
+import { getEventListeners } from 'events';
 import { json } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async () => {
@@ -100,5 +101,13 @@ export const GET: RequestHandler = async () => {
         })
     }
 
-	return json(pairs);
+    const peopleAnon = {}
+
+    for (const person of people) {
+        peopleAnon[person.name] = Math.floor(Math.random() * 90 + 10)
+    }
+
+    const pairsAnon = Object.entries(pairs).map(pair => [peopleAnon[pair[0]], peopleAnon[pair[1]]])
+
+	return json(pairsAnon);
 };
