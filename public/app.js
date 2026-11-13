@@ -1,5 +1,5 @@
 const canvas = document.querySelector('#snow');
-const isRetro = document.body.dataset.retro === 'true';
+let isRetro = document.body.dataset.retro === 'true';
 // UTC timestamps correspond to 14:00–20:00 in Japan (UTC+09:00).
 const calendarLines = [
   'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Casa Jamal//Christmas 2026//JA',
@@ -123,18 +123,34 @@ function changeLights() {
   scene.dataset.lights = String(lightMode);
   announce(['🎄 いつものクリスマス', '🎄 ピンクのイルミネーション', '🎄 アイスブルーのイルミネーション'][lightMode]);
 }
-landscape.addEventListener('click', changeLights);
+landscape.addEventListener('click', (event) => {
+  const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(landscape.getScreenCTM().inverse());
+  // Only the house and trees are interactive, not the entire snowy SVG canvas.
+  if ((point.x >= 200 && point.x <= 505 && point.y >= 190 && point.y <= 475) ||
+      event.target.closest('use')) changeLights();
+});
 landscape.addEventListener('keydown', (event) => {
   if (event.target === landscape && (event.key === 'Enter' || event.key === ' ')) {
     event.preventDefault();
     changeLights();
   }
 });
-const showTree = document.querySelector('#show-tree');
+let showTree;
 let treeTimer;
-showTree.querySelectorAll('circle').forEach((bulb, index) => {
-  bulb.style.setProperty('--delay', (-index * .18) + 's');
-});
+function bindShowTree() {
+  clearTimeout(treeTimer);
+  showTree = document.querySelector('#show-tree');
+  showTree.querySelectorAll('circle').forEach((bulb, index) => {
+    bulb.style.setProperty('--delay', (-index * .18) + 's');
+  });
+  showTree.addEventListener('click', treeLightShow);
+  showTree.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      treeLightShow(event);
+    }
+  });
+}
 function treeLightShow(event) {
   event.stopPropagation();
   playChimes([79, 83, 86, 91, 86, 83, 91, 95], .18);
@@ -145,13 +161,7 @@ function treeLightShow(event) {
   announce('🎄 ライトショー！');
   treeTimer = setTimeout(() => showTree.classList.remove('light-show'), 8000);
 }
-showTree.addEventListener('click', treeLightShow);
-showTree.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    treeLightShow(event);
-  }
-});
+bindShowTree();
 let lastSpark = 0;
 document.addEventListener('pointerup', (event) => {
   if (paused || media.matches || !event.isPrimary || event.button !== 0 ||

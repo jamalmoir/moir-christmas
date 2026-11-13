@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap');
 
-:root { background: #101a36; }
+html:has(body.retro) { background: #101a36; }
 body.retro {
   font-family: 'DotGothic16', monospace;
   font-weight: 400;

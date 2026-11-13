@@ -2,7 +2,7 @@
 export function renderRetro(html) {
   return html
     .replace('<body>', '<body class="retro" data-retro="true">')
-    .replace('</head>', '<meta name="robots" content="noindex, nofollow" /><link rel="stylesheet" href="/retro.css" /></head>')
+    .replace('</head>', '<meta name="robots" content="noindex, nofollow" /></head>')
     .replace('<title>Christmas @ Casa Jamal — 2026.12.19</title>', '<title>Christmas @ Casa Jamal — 8 BIT</title>')
     .replace(/<svg\s+class="landscape"[\s\S]*?<\/svg>/, pixelLandscape)
     .replace(/(<button class="santa-flight"[^>]*>)\s*<svg[\s\S]*?<\/svg>/, '$1' + pixelSanta);

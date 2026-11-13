@@ -1,5 +1,4 @@
 // Shared hidden interactions for the illustrated and pixel editions.
-const retroEdition = document.body.dataset.retro === 'true';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const invitationTitle = document.querySelector('.title-trigger');
 const flyingSanta = document.querySelector('.santa-flight');
@@ -7,12 +6,66 @@ const scenery = document.querySelector('.landscape');
 const panel = document.querySelector('.hero-copy');
 let titleTaps = 0, titleReset, presentExpiry, bootsTimer, catTimer;
 let present;
+let switchingEdition = false;
+const editions = new Map();
+function captureEdition(root) {
+  return {
+    landscape: root.querySelector('.landscape').innerHTML,
+    santa: root.querySelector('.santa-flight').innerHTML
+  };
+}
+editions.set(isRetro, captureEdition(document));
+
+async function switchEdition() {
+  if (switchingEdition) return;
+  switchingEdition = true;
+  const nextRetro = !isRetro;
+  try {
+    if (!editions.has(nextRetro)) {
+      const response = await fetch(nextRetro ? '/8bit' : '/');
+      if (!response.ok) throw new Error('Edition unavailable');
+      const otherPage = new DOMParser().parseFromString(await response.text(), 'text/html');
+      editions.set(nextRetro, captureEdition(otherPage));
+    }
+    const update = () => {
+      const artwork = editions.get(nextRetro);
+      scenery.innerHTML = artwork.landscape;
+      scenery.setAttribute('shape-rendering', nextRetro ? 'crispEdges' : 'auto');
+      flyingSanta.innerHTML = artwork.santa;
+      isRetro = nextRetro;
+      document.body.classList.toggle('retro', isRetro);
+      document.body.dataset.retro = String(isRetro);
+      bindShowTree();
+      positionHouseSecrets();
+    };
+    if (document.startViewTransition && !reducedMotion.matches) {
+      await document.startViewTransition(update).finished;
+    } else {
+      if (!reducedMotion.matches) await document.body.animate(
+        [{ opacity: 1 }, { opacity: 0 }], { duration: 180, fill: 'forwards' }
+      ).finished.then(() => document.body.getAnimations().forEach(a => a.cancel()));
+      update();
+      if (!reducedMotion.matches) await document.body.animate(
+        [{ opacity: 0 }, { opacity: 1 }], { duration: 250 }
+      ).finished;
+    }
+    document.fonts.ready.then(positionHouseSecrets);
+    playChimes(isRetro ? [72, 79, 84, 91] : [91, 84, 79, 72], .1);
+  } catch (error) {
+    announce('もう一度タップしてみてね。');
+    console.error('Could not switch edition', error);
+  } finally {
+    switchingEdition = false;
+  }
+}
 
 invitationTitle.addEventListener('click', () => {
   clearTimeout(titleReset);
   titleTaps++;
   if (titleTaps === 5) {
-    location.assign(retroEdition ? '/' : '/8bit');
+    titleTaps = 0;
+    announce('');
+    switchEdition();
     return;
   }
   if (titleTaps >= 3) announce(titleTaps === 3 ? '…？' : 'もう一回。');
@@ -24,7 +77,15 @@ const gifts = [
   ['🍪', 'サンタのおやつ発見。'], ['☃', '雪だるまが仲間になった！'],
   ['🐈', '箱の中に、ねこ。'], ['⭐', 'レア！クリスマスの星']
 ];
-flyingSanta.addEventListener('click', () => {
+flyingSanta.addEventListener('pointerdown', (event) => {
+  flyingSanta.style.animationPlayState = 'paused';
+  flyingSanta.setPointerCapture(event.pointerId);
+});
+flyingSanta.addEventListener('lostpointercapture', () => {
+  flyingSanta.style.animationPlayState = '';
+});
+flyingSanta.addEventListener('click', (event) => {
+  event.stopPropagation();
   if (present) present.remove();
   clearTimeout(presentExpiry);
   const rect = flyingSanta.getBoundingClientRect();
