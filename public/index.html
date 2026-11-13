@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#132e2a" />
+		<title>Christmas @ Casa Jamal — 2026.12.19</title>
+		<meta
+			name="description"
+			content="2026年12月19日（土）14:00〜、ジャマルの家でクリスマスパーティー。"
+		/>
+		<meta property="og:title" content="Christmas @ Casa Jamal" />
+		<meta
+			property="og:description"
+			content="2026年12月19日（土）14:00〜、ジャマルの家でクリスマスパーティー。"
+		/>
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="stylesheet" href="/styles.css" />
+		<script src="/app.js" defer></script>
+	</head>
+	<body>
+		<canvas id="snow" aria-hidden="true"></canvas>
+		<div class="texture" aria-hidden="true"></div>
+		<main id="home">
+			<section class="hero" aria-labelledby="title">
+				<div class="hero-copy">
+					<h1 id="title">
+						Christmas<span class="title-bottom"><i>@</i> Casa Jamal</span>
+					</h1>
+					<p class="date-line">
+						<time datetime="2026-12-19T14:00:00+09:00">2026年12月19日（土）14:00〜</time>
+						<a id="calendar" class="calendar-link" aria-label="カレンダーに追加（12月19日 14時〜20時）" title="カレンダーに追加">
+							<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18m-9 3v6m-3-3h6"/></svg>
+						</a>
+					</p>
+					<dl class="invitation-details">
+						<div>
+							<dt>服装：</dt>
+							<dd>ダサいクリスマスセーター</dd>
+						</div>
+						<div>
+							<dt>料理：</dt>
+							<dd>
+								各自、手料理を一品持参
+								<small>冬・クリスマス料理なら加点！<br />ジャマルは七面鳥＋クリスマス料理を数品</small>
+							</dd>
+						</div>
+						<div>
+							<dt>プレゼント：</dt>
+							<dd>500円のシークレットサンタ</dd>
+						</div>
+					</dl>
+				</div>
+				<div class="scene">
+					<button class="moon" type="button" aria-label="月をタップしてサンタを呼ぶ"></button>
+					<span class="sky-star star-one">✧</span><span class="sky-star star-two">✦</span
+					><span class="sky-star star-three">✧</span>
+					<svg
+						class="landscape"
+						role="button"
+						tabindex="0"
+						aria-label="ツリーをタップしてイルミネーションを変える"
+						viewBox="0 0 700 590"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<defs>
+							<linearGradient
+								id="snowhill"
+								x1="350"
+								y1="415"
+								x2="350"
+								y2="590"
+								gradientUnits="userSpaceOnUse"
+							>
+								<stop stop-color="#b5c9ba" />
+								<stop offset="1" stop-color="#54786b" />
+							</linearGradient>
+							<linearGradient id="window" x1="0" y1="0" x2="0" y2="1">
+								<stop stop-color="#ffcf79" />
+								<stop offset="1" stop-color="#e99b4e" />
+							</linearGradient>
+							<filter id="glow"><feGaussianBlur stdDeviation="7" /></filter>
+							<g id="tree">
+								<path d="M0-155-39-88h21l-37 64h27L-65 26H65L28-24h27L18-88h21Z" fill="#284f40" />
+								<path
+									d="M0-155-28-107l26-8 26 11Z M-17-85-40-45l39-9 39 12-23-43L0-76Z M-28-22-48 9-7 0 45 11 27-19 1-11Z"
+									fill="#b8cab7"
+								/>
+								<path d="M-5 26H5V45H-5z" fill="#65534a" />
+							</g>
+						</defs>
+						<path d="M0 461Q130 380 279 431Q490 354 700 450V590H0Z" fill="#294e41" />
+						<g opacity=".6">
+							<use href="#tree" transform="translate(102 396) scale(.75)" />
+							<use href="#tree" transform="translate(591 390) scale(.85)" />
+							<use href="#tree" transform="translate(641 412) scale(.58)" />
+						</g>
+						<path d="M0 503Q130 423 288 464Q486 409 700 475V590H0Z" fill="url(#snowhill)" />
+						<g
+							class="chimney-smoke"
+							stroke="#c4cdb5"
+							stroke-width="9"
+							stroke-linecap="round"
+							opacity=".18"
+						>
+							<path d="M407 245q-25-25 0-49t-3-48" />
+							<path d="M421 224q-18-25 3-44" />
+						</g>
+						<path d="M397 241v-49h32v65" fill="#94594b" />
+						<path d="M391 192h43v12h-43z" fill="#eee2c7" />
+						<path d="M225 329 355 219 484 329V464H225Z" fill="#a94f3e" />
+						<path d="M355 219 484 329V464H355Z" fill="#833f35" />
+						<g stroke="#c57155" opacity=".38" stroke-width="2">
+							<path d="M230 356h248M230 378h248M230 400h248M230 422h248M230 444h248" />
+						</g>
+						<path d="m207 332 148-128 148 128-19 19L355 239 226 351Z" fill="#493d35" />
+						<path
+							d="m201 324 154-130 155 130q-9 17-24 5L355 221 224 330q-14 12-23-6"
+							fill="#f0e8d4"
+						/>
+						<path d="M305 462V369a28 28 0 0 1 56 0v93Z" fill="#3b4a3b" />
+						<path d="M318 372a15 15 0 0 1 30 0v23h-30Z" fill="url(#window)" />
+						<circle cx="350" cy="421" r="3" fill="#e2bd76" />
+						<g fill="#ffd78a" opacity=".4" filter="url(#glow)">
+							<path d="M252 354h37v46h-37zM390 354h54v46h-54z" />
+						</g>
+						<g fill="url(#window)" stroke="#e5cba0" stroke-width="5">
+							<path d="M250 354h39v46h-39zM391 354h50v46h-50z" />
+						</g>
+						<g stroke="#784939" stroke-width="4">
+							<path d="M270 354v46m-20-23h39m127-23v46m-25-23h50" />
+						</g>
+						<path
+							d="M244 402h52M384 402h65"
+							stroke="#e7dfc8"
+							stroke-width="7"
+							stroke-linecap="round"
+						/>
+						<circle cx="355" cy="288" r="20" stroke="#324f37" stroke-width="11" />
+						<path d="m354 301-12 13 12-2 5 8 2-19Z" fill="#d15542" />
+						<path d="M229 336q55 30 102 0m30 0q58 30 116 0" stroke="#253c2c" stroke-width="5" />
+						<g class="house-lights" fill="#f5d595">
+							<circle cx="236" cy="340" r="3" />
+							<circle cx="255" cy="347" r="3" />
+							<circle cx="278" cy="349" r="3" />
+							<circle cx="301" cy="346" r="3" />
+							<circle cx="322" cy="340" r="3" />
+							<circle cx="372" cy="341" r="3" />
+							<circle cx="393" cy="347" r="3" />
+							<circle cx="416" cy="350" r="3" />
+							<circle cx="439" cy="347" r="3" />
+							<circle cx="464" cy="340" r="3" />
+						</g>
+						<path d="M297 463h73v10h-73z" fill="#e8ddc1" />
+						<path
+							d="M317 476q-5 28 50 52t-30 62h136q54-49-60-75t-61-39"
+							fill="#d1d1b7"
+							opacity=".65"
+						/>
+						<use href="#tree" transform="translate(174 464) scale(1.22)" />
+						<use href="#tree" transform="translate(539 470) scale(1.5)" />
+						<use href="#tree" transform="translate(629 500) scale(.85)" />
+						<g fill="#daae5c">
+							<path d="m539 224 4 11 12 1-9 8 3 12-10-6-10 6 3-12-9-8 12-1Z" />
+							<circle cx="521" cy="337" r="4" />
+							<circle cx="552" cy="365" r="4" />
+							<circle cx="512" cy="404" r="4" />
+							<circle cx="566" cy="424" r="4" />
+						</g>
+						<g fill="#b74d40">
+							<circle cx="548" cy="320" r="5" />
+							<circle cx="514" cy="377" r="5" />
+							<circle cx="553" cy="404" r="5" />
+							<circle cx="534" cy="440" r="5" />
+						</g>
+						<path
+							d="M80 536q132-38 202-5M481 553q92-25 168-4"
+							stroke="#c5d0b9"
+							stroke-width="2"
+							opacity=".4"
+						/>
+						<g transform="translate(255 450)">
+							<path d="M0 0h27v25H0z" fill="#c37450" />
+							<path d="M11 0h5v25h-5zM0 8h27v4H0z" fill="#e7cd92" />
+							<path d="M30 8h20v18H30z" fill="#45634b" />
+							<path d="M38 8h4v18h-4z" fill="#cfad69" />
+						</g>
+					</svg>
+				</div>
+				<div class="santa-flight" aria-hidden="true">
+					<svg viewBox="0 0 320 100">
+						<g fill="#d7d2ac">
+							<path
+								d="m174 48 18-13 20 3 14-15 5 4-13 19-23 1-16 14-6-3 11-14m22 1 7 23-5 2-10-21m18-17-2-18 5-1 1 10 8-7 2 3-9 9m34 1 18-13 20 3 14-15 5 4-13 19-23 1-16 14-6-3 11-14m22 1 7 23-5 2-10-21m18-17-2-18 5-1 1 10 8-7 2 3-9 9"
+							/>
+							<path d="M67 58h62l-7 23H82Z" fill="#be5542" />
+							<path
+								d="M69 82q53 16 72-5M83 76l-3 9m39-9 2 8"
+								stroke="#d9bf88"
+								stroke-width="3"
+								fill="none"
+							/>
+							<path d="M91 58q-14-23 9-28 19-1 22 28Z" fill="#b84d3d" />
+							<circle cx="106" cy="28" r="9" fill="#e7d7b7" />
+							<path d="m95 23 5-15 19 15Z" fill="#be5542" />
+							<circle cx="100" cy="9" r="3" />
+							<path d="M101 31q8 16 14 0" fill="#f4e8cf" />
+							<path d="M72 58q-20-24 1-30 15 3 19 30" fill="#87734b" />
+						</g>
+						<path d="M122 59Q200 57 278 35" stroke="#d1be87" stroke-width="1" fill="none" />
+					</svg>
+				</div>
+			</section>
+		</main>
+		<p id="surprise-status" class="surprise-status" role="status" aria-live="polite"></p>
+	</body>
+</html>

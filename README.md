@@ -1,38 +1,29 @@
-# create-svelte
+# Christmas @ Casa Jamal · 2026
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Japanese Christmas invitation for December 19, 2026, from 14:00 JST.
+Static HTML, CSS, and JavaScript; no runtime dependencies or database.
 
-## Creating a project
+## Local development
 
-If you're seeing this, you've probably already done this step. Congrats!
+Use Node.js 22 or later. Run `npm run dev`, then visit http://localhost:5173.
+Run `npm run build` to create `dist/`, or `npm run preview` to serve that build.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+The active site lives in `public/`. `scripts/` contains the dependency-free build
+and local server. The legacy Svelte source and assets are retained for reference
+but are not included in the build.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Deployment
 
-## Developing
+`vercel.json` explicitly selects a static build, runs `npm run build`, and serves
+`dist/`. The existing GitHub → Vercel connection continues to deploy when changes
+reach `main`. No environment variables are required for this invitation.
+The Vercel production deployment itself has not been tested from this workspace.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Features
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Responsive Japanese invitation and original SVG winter scene.
+- Canvas snowfall, occasional flying Santa, glowing lights, and chimney smoke.
+- Automatic reduced-motion preference support.
+- Tap the moon to summon Santa, or the scene to change the lights and create sparkles.
+- Calendar download for December 19, 2026, 14:00–20:00 Japan time.
+- Google Fonts with local rounded sans-serif fallbacks.

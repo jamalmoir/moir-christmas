@@ -1,0 +1,145 @@
+const canvas = document.querySelector('#snow');
+// UTC timestamps correspond to 14:00–20:00 in Japan (UTC+09:00).
+const calendarLines = [
+  'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Casa Jamal//Christmas 2026//JA',
+  'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', 'UID:christmas-2026@casa-jamal',
+  'DTSTAMP:20261113T000000Z', 'DTSTART:20261219T050000Z', 'DTEND:20261219T110000Z',
+  'SUMMARY:Christmas @ Casa Jamal', 'LOCATION:ジャマルの家',
+  'DESCRIPTION:服装：ダサいクリスマスセーター。各自、手料理を一品持参。シークレットサンタ用に500円のプレゼント。',
+  'END:VEVENT', 'END:VCALENDAR'
+];
+function foldCalendarLine(line) {
+  let folded = '', count = 0;
+  for (const char of line) {
+    const bytes = new TextEncoder().encode(char).length;
+    if (count + bytes > 75) { folded += '\r\n '; count = 1; }
+    folded += char; count += bytes;
+  }
+  return folded;
+}
+const calendarFile = new Blob([calendarLines.map(foldCalendarLine).join('\r\n') + '\r\n'], {
+  type: 'text/calendar;charset=utf-8'
+});
+const calendarLink = document.querySelector('#calendar');
+calendarLink.href = URL.createObjectURL(calendarFile);
+calendarLink.download = 'christmas-casa-jamal-2026.ics';
+const ctx = canvas.getContext('2d');
+const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+let paused = media.matches;
+let width = 0,
+	height = 0,
+	flakes = [],
+	frame = 0,
+	previous = 0;
+function resize() {
+	width = innerWidth;
+	height = innerHeight;
+	const scale = Math.min(devicePixelRatio || 1, 2);
+	canvas.width = width * scale;
+	canvas.height = height * scale;
+	ctx.setTransform(scale, 0, 0, scale, 0, 0);
+	flakes = Array.from({ length: Math.min(100, Math.floor(width / 13)) }, () => ({
+		x: Math.random() * width,
+		y: Math.random() * height,
+		r: 0.6 + Math.random() * 1.7,
+		speed: 9 + Math.random() * 20,
+		drift: Math.random() * Math.PI * 2,
+		opacity: 0.2 + Math.random() * 0.55
+	}));
+	draw(0);
+}
+function draw(delta) {
+	ctx.clearRect(0, 0, width, height);
+	for (const f of flakes) {
+		f.y += f.speed * delta;
+		f.drift += delta * 0.35;
+		f.x += Math.sin(f.drift) * 7 * delta;
+		if (f.y > height + 4) {
+			f.y = -4;
+			f.x = Math.random() * width;
+		}
+		if (f.x < -4) f.x = width + 4;
+		if (f.x > width + 4) f.x = -4;
+		ctx.beginPath();
+		ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+		ctx.fillStyle = 'rgba(246,242,224,' + f.opacity + ')';
+		ctx.fill();
+	}
+}
+function animate(now) {
+	draw(previous ? Math.min((now - previous) / 1000, 0.05) : 0);
+	previous = now;
+	frame = requestAnimationFrame(animate);
+}
+function syncMotion() {
+	cancelAnimationFrame(frame);
+	previous = 0;
+	document.documentElement.classList.toggle('motion-paused', paused);
+	if (!paused && !document.hidden) frame = requestAnimationFrame(animate);
+}
+media.addEventListener('change', (e) => {
+	paused = e.matches;
+	syncMotion();
+});
+document.addEventListener('visibilitychange', syncMotion);
+window.addEventListener('resize', resize);
+resize();
+syncMotion();
+
+const scene = document.querySelector('.scene');
+const moon = document.querySelector('.moon');
+const landscape = document.querySelector('.landscape');
+const santa = document.querySelector('.santa-flight');
+const status = document.querySelector('#surprise-status');
+let messageTimer, santaTimer, lightMode = 0, moonVisits = 0;
+function announce(message) {
+  clearTimeout(messageTimer);
+  status.textContent = message;
+  messageTimer = setTimeout(() => { status.textContent = ''; }, 3000);
+}
+moon.addEventListener('click', () => {
+  moonVisits++;
+  if (paused || media.matches) {
+    announce('🎅 メリークリスマス！');
+    return;
+  }
+  clearTimeout(santaTimer);
+  santa.classList.remove('summoned');
+  // Restart the flight on each deliberate tap, including while Santa is passing.
+  void santa.offsetWidth;
+  santa.classList.add('summoned');
+  announce(moonVisits % 3 === 0 ? '🎅 また呼んだ？' : '🎅 サンタが来た！');
+  santaTimer = setTimeout(() => santa.classList.remove('summoned'), 6100);
+});
+function changeLights() {
+  lightMode = (lightMode + 1) % 3;
+  scene.dataset.lights = String(lightMode);
+  announce(['🎄 いつものクリスマス', '🎄 ピンクのイルミネーション', '🎄 アイスブルーのイルミネーション'][lightMode]);
+}
+landscape.addEventListener('click', changeLights);
+landscape.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    changeLights();
+  }
+});
+let lastSpark = 0;
+document.addEventListener('pointerup', (event) => {
+  if (paused || media.matches || !event.isPrimary || event.button !== 0 ||
+      event.target.closest('.hero-copy, #motion-toggle') || performance.now() - lastSpark < 150) return;
+  lastSpark = performance.now();
+  for (let i = 0; i < 9; i++) {
+    const spark = document.createElement('span');
+    spark.className = 'tap-spark';
+    spark.setAttribute('aria-hidden', 'true');
+    spark.textContent = i % 2 ? '✦' : '❄';
+    const angle = Math.PI * 2 * i / 9;
+    spark.style.setProperty('--x', event.clientX + 'px');
+    spark.style.setProperty('--y', event.clientY + 'px');
+    spark.style.setProperty('--dx', Math.cos(angle) * 55 + 'px');
+    spark.style.setProperty('--dy', Math.sin(angle) * 55 + 'px');
+    spark.style.setProperty('--spark-color', ['#f0e8ce', '#e9ba64', '#f39c88'][i % 3]);
+    document.body.append(spark);
+    setTimeout(() => spark.remove(), 900);
+  }
+});
