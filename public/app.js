@@ -1,4 +1,5 @@
 const canvas = document.querySelector('#snow');
+const isRetro = document.body.dataset.retro === 'true';
 // UTC timestamps correspond to 14:00–20:00 in Japan (UTC+09:00).
 const calendarLines = [
   'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Casa Jamal//Christmas 2026//JA',
@@ -60,10 +61,14 @@ function draw(delta) {
 		}
 		if (f.x < -4) f.x = width + 4;
 		if (f.x > width + 4) f.x = -4;
-		ctx.beginPath();
-		ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
 		ctx.fillStyle = 'rgba(246,242,224,' + f.opacity + ')';
-		ctx.fill();
+		if (isRetro) {
+			ctx.fillRect(Math.round(f.x / 3) * 3, Math.round(f.y / 3) * 3, 3, 3);
+		} else {
+			ctx.beginPath();
+			ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+			ctx.fill();
+		}
 	}
 }
 function animate(now) {
@@ -184,18 +189,18 @@ function updateSoundLabel() {
 }
 function bell(note, when, volume = .08) {
   const frequency = 440 * 2 ** ((note - 69) / 12);
-  for (const [ratio, level] of [[1, 1], [2, .25], [3.01, .08]]) {
+  for (const [ratio, level] of (isRetro ? [[1, .45], [.5, .18]] : [[1, 1], [2, .25], [3.01, .08]])) {
     const oscillator = audioContext.createOscillator();
     const envelope = audioContext.createGain();
-    oscillator.type = 'sine';
+    oscillator.type = isRetro ? (ratio === 1 ? 'square' : 'triangle') : 'sine';
     oscillator.frequency.value = frequency * ratio;
     envelope.gain.setValueAtTime(0, when);
     envelope.gain.linearRampToValueAtTime(volume * level, when + .008);
-    envelope.gain.exponentialRampToValueAtTime(.0001, when + 1.6);
+    envelope.gain.exponentialRampToValueAtTime(.0001, when + (isRetro ? .24 : 1.6));
     oscillator.connect(envelope);
     envelope.connect(masterGain);
     oscillator.start(when);
-    oscillator.stop(when + 1.7);
+    oscillator.stop(when + (isRetro ? .3 : 1.7));
     oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); };
   }
 }

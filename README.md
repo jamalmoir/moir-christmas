@@ -27,3 +27,13 @@ The Vercel production deployment itself has not been tested from this workspace.
 - Tap the moon to summon Santa, or the scene to change the lights and create sparkles.
 - Calendar download for December 19, 2026, 14:00–20:00 Japan time.
 - Google Fonts with local rounded sans-serif fallbacks.
+
+## Hidden 8-bit edition
+
+`/8bit` is an unlinked alternate invitation with pixel artwork, pixel fonts,
+square snow, and opt-in square/triangle-wave chiptune audio. It keeps the main
+page's calendar and interactions. A robots meta tag requests no indexing; this
+is an Easter egg, not a private or authenticated page.
+
+`scripts/retro.mjs` generates it from the main invitation so copy stays in sync.
+The build emits `dist/8bit.html`, and Vercel rewrites `/8bit` to that file.
