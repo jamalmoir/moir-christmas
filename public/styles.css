@@ -64,7 +64,7 @@ main { height: 100svh; }
   display: flex;
   padding: 55px 7% 30px;
   align-items: center;
-  overflow: hidden;
+  overflow: clip;
   isolation: isolate;
 }
 .hero::after {
@@ -198,6 +198,31 @@ h1 {
 }
 .landscape { pointer-events: auto; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .landscape:focus-visible { outline: 2px dashed #ceb579; outline-offset: -10px; }
+#show-tree { cursor: pointer; }
+#show-tree:focus-visible { outline: none; }
+#show-tree:focus-visible .tree-hit { stroke: #f0e8ce; stroke-width: 2; stroke-dasharray: 5 5; }
+.show-bulbs { opacity: 0; }
+.light-show .show-bulbs { opacity: 1; }
+.light-show circle {
+  animation: tree-lights 2.8s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+.light-show .tree-star {
+  fill: #fff0ac;
+  filter: drop-shadow(0 0 8px #ffd95e);
+  animation: tree-star-glow 2s ease-in-out infinite;
+}
+@keyframes tree-lights {
+  0%, 100% { fill: #ff799f; filter: drop-shadow(0 0 5px #ff799f); }
+  33% { fill: #ffe78f; filter: drop-shadow(0 0 9px #ffd76a); }
+  66% { fill: #87fff1; filter: drop-shadow(0 0 6px #55e9e1); }
+}
+@keyframes tree-star-glow {
+  50% { filter: drop-shadow(0 0 15px #ffe58b); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .light-show circle { fill: #ffe78f; filter: drop-shadow(0 0 5px #ffd76a); }
+}
 .scene[data-lights="1"] .house-lights { fill: #ff91be; }
 .scene[data-lights="2"] .house-lights { fill: #8bfff0; }
 .scene[data-lights="1"] .landscape { filter: saturate(1.5) hue-rotate(-12deg); }

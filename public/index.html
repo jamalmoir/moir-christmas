@@ -57,9 +57,9 @@
 					><span class="sky-star star-three">✧</span>
 					<svg
 						class="landscape"
-						role="button"
+						role="group"
 						tabindex="0"
-						aria-label="ツリーをタップしてイルミネーションを変える"
+						aria-label="家や木をタップして色を変える"
 						viewBox="0 0 700 590"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
@@ -159,10 +159,11 @@
 							opacity=".65"
 						/>
 						<use href="#tree" transform="translate(174 464) scale(1.22)" />
-						<use href="#tree" transform="translate(539 470) scale(1.5)" />
 						<use href="#tree" transform="translate(629 500) scale(.85)" />
+						<g id="show-tree" role="button" tabindex="0" aria-label="右のツリーのライトショーを再生">
+						<use href="#tree" transform="translate(539 470) scale(1.5)" />
 						<g fill="#daae5c">
-							<path d="m539 224 4 11 12 1-9 8 3 12-10-6-10 6 3-12-9-8 12-1Z" />
+							<path class="tree-star" d="m539 224 4 11 12 1-9 8 3 12-10-6-10 6 3-12-9-8 12-1Z" />
 							<circle cx="521" cy="337" r="4" />
 							<circle cx="552" cy="365" r="4" />
 							<circle cx="512" cy="404" r="4" />
@@ -173,6 +174,15 @@
 							<circle cx="514" cy="377" r="5" />
 							<circle cx="553" cy="404" r="5" />
 							<circle cx="534" cy="440" r="5" />
+						</g>
+						<g class="show-bulbs" aria-hidden="true">
+						<circle cx="539" cy="276" r="4"/><circle cx="526" cy="299" r="4"/>
+						<circle cx="552" cy="319" r="4"/><circle cx="520" cy="344" r="4"/>
+						<circle cx="568" cy="365" r="4"/><circle cx="505" cy="388" r="4"/>
+						<circle cx="566" cy="410" r="4"/><circle cx="490" cy="435" r="4"/>
+						<circle cx="590" cy="459" r="4"/><circle cx="524" cy="480" r="4"/>
+						</g>
+						<path class="tree-hit" d="M539 220 602 338 578 338 622 435 600 435 641 517H437L480 435H457L500 338H477Z" fill="transparent"/>
 						</g>
 						<path
 							d="M80 536q132-38 202-5M481 553q92-25 168-4"

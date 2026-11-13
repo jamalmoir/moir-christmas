@@ -118,9 +118,30 @@ function changeLights() {
 }
 landscape.addEventListener('click', changeLights);
 landscape.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' || event.key === ' ') {
+  if (event.target === landscape && (event.key === 'Enter' || event.key === ' ')) {
     event.preventDefault();
     changeLights();
+  }
+});
+const showTree = document.querySelector('#show-tree');
+let treeTimer;
+showTree.querySelectorAll('circle').forEach((bulb, index) => {
+  bulb.style.setProperty('--delay', (-index * .18) + 's');
+});
+function treeLightShow(event) {
+  event.stopPropagation();
+  clearTimeout(treeTimer);
+  showTree.classList.remove('light-show');
+  void showTree.getBoundingClientRect();
+  showTree.classList.add('light-show');
+  announce('🎄 ライトショー！');
+  treeTimer = setTimeout(() => showTree.classList.remove('light-show'), 8000);
+}
+showTree.addEventListener('click', treeLightShow);
+showTree.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    treeLightShow(event);
   }
 });
 let lastSpark = 0;
