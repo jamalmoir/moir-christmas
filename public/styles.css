@@ -148,6 +148,7 @@ h1 {
 	margin-bottom: clamp(10px, 1.7svh, 17px);
 }
 .invitation-details > div:last-child {
+	grid-template-columns: max-content minmax(0, 1fr);
 	margin-bottom: 0;
 }
 .invitation-details dt {
