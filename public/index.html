@@ -17,6 +17,7 @@
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<link rel="stylesheet" href="/styles.css" />
 		<script src="/app.js" defer></script>
+		<script src="/surprises.js" defer></script>
 	</head>
 	<body>
 		<canvas id="snow" aria-hidden="true"></canvas>
@@ -28,7 +29,7 @@
 			<section class="hero" aria-labelledby="title">
 				<div class="hero-copy">
 					<h1 id="title">
-						Christmas<span class="title-bottom"><i>@</i> Casa Jamal</span>
+						<button class="title-trigger" type="button" aria-label="Christmas @ Casa Jamal">Christmas<span class="title-bottom"><i>@</i> Casa Jamal</span></button>
 					</h1>
 					<p class="date-line">
 						<time datetime="2026-12-19T14:00:00+09:00">2026年12月19日（土）14:00〜</time>
@@ -201,7 +202,7 @@
 						</g>
 					</svg>
 				</div>
-				<div class="santa-flight" aria-hidden="true">
+				<button class="santa-flight" type="button" aria-label="サンタをつかまえる">
 					<svg viewBox="0 0 320 100">
 						<g fill="#d7d2ac">
 							<path
@@ -223,7 +224,7 @@
 						</g>
 						<path d="M122 59Q200 57 278 35" stroke="#d1be87" stroke-width="1" fill="none" />
 					</svg>
-				</div>
+				</button>
 			</section>
 		</main>
 		<p class="secret-hint">この夜には、さわるとわかる秘密が。</p>

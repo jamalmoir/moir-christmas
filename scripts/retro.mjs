@@ -5,7 +5,7 @@ export function renderRetro(html) {
     .replace('</head>', '<meta name="robots" content="noindex, nofollow" /><link rel="stylesheet" href="/retro.css" /></head>')
     .replace('<title>Christmas @ Casa Jamal — 2026.12.19</title>', '<title>Christmas @ Casa Jamal — 8 BIT</title>')
     .replace(/<svg\s+class="landscape"[\s\S]*?<\/svg>/, pixelLandscape)
-    .replace(/(<div class="santa-flight"[^>]*>)\s*<svg[\s\S]*?<\/svg>/, '$1' + pixelSanta);
+    .replace(/(<button class="santa-flight"[^>]*>)\s*<svg[\s\S]*?<\/svg>/, '$1' + pixelSanta);
 }
 
 const pixelLandscape = `<svg class="landscape" viewBox="0 0 700 590" role="group" tabindex="0" aria-label="家や木をタップして色を変える" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">

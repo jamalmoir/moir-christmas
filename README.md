@@ -25,6 +25,9 @@ The Vercel production deployment itself has not been tested from this workspace.
 - Canvas snowfall, occasional flying Santa, glowing lights, and chimney smoke.
 - Automatic reduced-motion preference support.
 - Tap the moon to summon Santa, or the scene to change the lights and create sparkles.
+- Catch Santa to drop a present, then tap it to unwrap a random surprise.
+- Tap the chimney for Santa's boots; the window cat peeks out and hides when tapped.
+- Tap the title five times within a short sequence to switch between normal and 8-bit editions.
 - Calendar download for December 19, 2026, 14:00–20:00 Japan time.
 - Google Fonts with local rounded sans-serif fallbacks.
 
