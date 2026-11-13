@@ -290,27 +290,8 @@ h1 {
   85% { transform: translateY(0) rotate(7deg); }
   to { transform: translateY(0) rotate(0); }
 }
-.chimney-surprise, .window-cat {
-  position: fixed; padding: 0; border: none; background: none;
-  width: 48px; height: 64px; z-index: 3; cursor: pointer;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
-}
-.window-cat { height: 48px; }
-.chimney-surprise svg, .window-cat svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.santa-boots { opacity: 0; transform: translateY(18px); transition: opacity .2s, transform .3s; }
-.boots-out .santa-boots { opacity: 1; transform: translateY(0); animation: boots-wiggle .5s ease-in-out 5; transform-origin: 24px 43px; }
-@keyframes boots-wiggle { 50% { transform: rotate(9deg); } }
-.cat-face { animation: cat-peek 18s ease-in-out infinite; }
-@keyframes cat-peek {
-  0%, 14%, 47%, 100% { opacity: 0; transform: translateY(7px); }
-  20%, 40% { opacity: 1; transform: translateY(0); }
-}
-.cat-hiding .cat-face { animation: none; opacity: 0; }
-.retro .chimney-surprise svg, .retro .window-cat svg { shape-rendering: crispEdges; }
 @media (prefers-reduced-motion: reduce) {
   .santa-flight { display: block !important; position: fixed; left: 8px; top: 8px; bottom: auto; width: 125px; transform: none; }
-  .cat-face { opacity: 1; }
-  .cat-hiding .cat-face { opacity: 0; }
   .dropped-present { transform: none; }
 }
 .tap-spark {
