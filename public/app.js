@@ -98,6 +98,7 @@ function announce(message) {
   messageTimer = setTimeout(() => { status.textContent = ''; }, 3000);
 }
 moon.addEventListener('click', () => {
+  playChimes([84, 88, 91, 96], .14);
   moonVisits++;
   if (paused || media.matches) {
     announce('🎅 メリークリスマス！');
@@ -112,6 +113,7 @@ moon.addEventListener('click', () => {
   santaTimer = setTimeout(() => santa.classList.remove('summoned'), 6100);
 });
 function changeLights() {
+  playChimes([76, 83], .12);
   lightMode = (lightMode + 1) % 3;
   scene.dataset.lights = String(lightMode);
   announce(['🎄 いつものクリスマス', '🎄 ピンクのイルミネーション', '🎄 アイスブルーのイルミネーション'][lightMode]);
@@ -130,6 +132,7 @@ showTree.querySelectorAll('circle').forEach((bulb, index) => {
 });
 function treeLightShow(event) {
   event.stopPropagation();
+  playChimes([79, 83, 86, 91, 86, 83, 91, 95], .18);
   clearTimeout(treeTimer);
   showTree.classList.remove('light-show');
   void showTree.getBoundingClientRect();
@@ -147,7 +150,7 @@ showTree.addEventListener('keydown', (event) => {
 let lastSpark = 0;
 document.addEventListener('pointerup', (event) => {
   if (paused || media.matches || !event.isPrimary || event.button !== 0 ||
-      event.target.closest('.hero-copy, #motion-toggle') || performance.now() - lastSpark < 150) return;
+      event.target.closest('.hero-copy, #sound-toggle') || performance.now() - lastSpark < 150) return;
   lastSpark = performance.now();
   for (let i = 0; i < 9; i++) {
     const spark = document.createElement('span');
@@ -162,5 +165,105 @@ document.addEventListener('pointerup', (event) => {
     spark.style.setProperty('--spark-color', ['#f0e8ce', '#e9ba64', '#f39c88'][i % 3]);
     document.body.append(spark);
     setTimeout(() => spark.remove(), 900);
+  }
+});
+
+// Original music-box phrase, synthesized locally. Never starts without a tap.
+const soundToggle = document.querySelector('#sound-toggle');
+let audioContext, masterGain, musicTimer, soundEnabled = false, nextNote = 0, noteIndex = 0;
+const winterMelody = [
+  [79, 1], [84, 1], [88, 2], [86, 1], [84, 1], [91, 2],
+  [88, 1], [86, 1], [83, 2], [79, 2], [0, 2],
+  [81, 1], [84, 1], [89, 2], [88, 1], [86, 1], [84, 2],
+  [83, 1], [86, 1], [79, 2], [84, 3], [0, 7]
+];
+function updateSoundLabel() {
+  soundToggle.setAttribute('aria-pressed', String(soundEnabled));
+  soundToggle.setAttribute('aria-label', soundEnabled ? 'クリスマスの音をオフにする' : 'クリスマスの音をオンにする');
+  soundToggle.querySelector('.sound-label').textContent = soundEnabled ? '音をオフ' : '音をオン';
+}
+function bell(note, when, volume = .08) {
+  const frequency = 440 * 2 ** ((note - 69) / 12);
+  for (const [ratio, level] of [[1, 1], [2, .25], [3.01, .08]]) {
+    const oscillator = audioContext.createOscillator();
+    const envelope = audioContext.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = frequency * ratio;
+    envelope.gain.setValueAtTime(0, when);
+    envelope.gain.linearRampToValueAtTime(volume * level, when + .008);
+    envelope.gain.exponentialRampToValueAtTime(.0001, when + 1.6);
+    oscillator.connect(envelope);
+    envelope.connect(masterGain);
+    oscillator.start(when);
+    oscillator.stop(when + 1.7);
+    oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); };
+  }
+}
+let lastChime = 0;
+function playChimes(notes, spacing) {
+  if (!soundEnabled || !audioContext || audioContext.state !== 'running' || document.hidden) return;
+  if (audioContext.currentTime - lastChime < .4) return;
+  lastChime = audioContext.currentTime;
+  notes.forEach((note, index) => bell(note, audioContext.currentTime + index * spacing, .06));
+}
+function scheduleMusic() {
+  if (!soundEnabled || document.hidden || audioContext.state !== 'running') return;
+  while (nextNote < audioContext.currentTime + .2) {
+    const [note, beats] = winterMelody[noteIndex];
+    if (note) bell(note, Math.max(nextNote, audioContext.currentTime), .065);
+    nextNote += beats * .45;
+    noteIndex = (noteIndex + 1) % winterMelody.length;
+  }
+}
+soundToggle.addEventListener('click', async () => {
+  if (soundEnabled) {
+    soundEnabled = false;
+    clearInterval(musicTimer);
+    masterGain.gain.setTargetAtTime(0, audioContext.currentTime, .025);
+    updateSoundLabel();
+    return;
+  }
+  soundToggle.disabled = true;
+  try {
+    const AudioEngine = window.AudioContext || window.webkitAudioContext;
+    if (!AudioEngine) throw new Error('Audio unavailable');
+    if (!audioContext) {
+      audioContext = new AudioEngine();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = 0;
+      masterGain.connect(audioContext.destination);
+    }
+    await audioContext.resume();
+    if (audioContext.state !== 'running') throw new Error('Audio unavailable');
+    soundEnabled = true;
+    masterGain.gain.setTargetAtTime(.6, audioContext.currentTime, .05);
+    noteIndex = 0;
+    nextNote = audioContext.currentTime + .05;
+    clearInterval(musicTimer);
+    musicTimer = setInterval(scheduleMusic, 100);
+    scheduleMusic();
+  } catch {
+    soundEnabled = false;
+    announce('音を再生できませんでした。もう一度タップしてみてください。');
+  } finally {
+    soundToggle.disabled = false;
+    updateSoundLabel();
+  }
+});
+document.addEventListener('visibilitychange', async () => {
+  if (!audioContext) return;
+  try {
+    if (document.hidden) {
+      await audioContext.suspend();
+    } else if (soundEnabled) {
+      await audioContext.resume();
+      nextNote = audioContext.currentTime + .1;
+      if (audioContext.state !== 'running') throw new Error('Audio interrupted');
+    }
+  } catch {
+    soundEnabled = false;
+    clearInterval(musicTimer);
+    masterGain.gain.value = 0;
+    updateSoundLabel();
   }
 });
